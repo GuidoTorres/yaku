@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Box Plot Chart</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.bundle.min.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.min.css" rel="stylesheet" media="all">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/chartjs-chart-box-and-violin-plot/2.4.0/Chart.BoxPlot.min.js" integrity="sha512-wThQu2PZG8h1zgYe9HNYAblGSRzSeZ7g584vrTiizIZJHw7gG1LCDZsLy/YHVnw3lp7pXXNJNa4ilECz1DiqPA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://unpkg.com/d3-random@latest/dist/d3-random.js"></script>
+    <script src="./utils.js"></script>
+    <style>
+      canvas {
+        -moz-user-select: none;
+        -webkit-user-select: none;
+        -ms-user-select: none;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div id="container" style="width: 75%;">
+      <canvas id="canvas"></canvas>
+    </div>
+    <button id="randomizeData">Randomize Data</button>
+    <button id="addDataset">Add Dataset</button>
+    <button id="removeDataset">Remove Dataset</button>
+    <button id="addData">Add Data</button>
+    <button id="removeData">Remove Data</button>
+    <script>
+      const samples = this.Samples.utils;
+      var color = Chart.helpers.color;
+      var b = d3.randomNormal();
+      var random = (min, max) => () => b() * ((max || 1) - (min || 0)) + (min || 0);
+      console.log(samples.months({ count: 3 }));
+      var samp = samples.boxplots({ count: 3, random: random });
+      var boxplotData = {
+        labels: samples.months({ count: 3 }),
+        datasets: [
+          {
+            label: 'Dataset 1',
+            backgroundColor: color(window.chartColors.red).alpha(0.5).rgbString(),
+            borderColor: window.chartColors.red,
+            borderWidth: 1,
+            data: samples.boxplots({ count: 7, random: random }),
+            outlierColor: '#999999',
+            lowerColor: '#461e7d',
+          },
+        ],
+      };
+
+      window.onload = function () {
+        var ctx = document.getElementById('canvas').getContext('2d');
+        window.myBar = new Chart(ctx, {
+          type: 'boxplot',
+          data: boxplotData,
+          options: {
+            responsive: true,
+            legend: {
+              position: 'top',
+            },
+            title: {
+              display: true,
+              text: 'Chart.js Box Plot Chart',
+            },
+            scales: {
+              xAxes: [
+                {
+                  // Specific to Bar Controller
+                  categoryPercentage: 0.9,
+                  barPercentage: 0.8,
+                },
+              ],
+            },
+          },
+        });
+      };
+
+
+    </script>
+  </body>
+</html>
